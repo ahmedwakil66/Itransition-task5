@@ -24,7 +24,6 @@ const HomePage = () => {
     if (page === 0) {
       setData(data);
     } else {
-      // @ts-ignore
       setData((prev) => [...prev, ...data]);
     }
   }, [region, errorValue, seed, page]);

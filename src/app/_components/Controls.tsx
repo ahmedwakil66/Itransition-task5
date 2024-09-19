@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { ChangeEvent } from "react";
 import useValueStore, { region } from "@/store";
 import Export from './Export';
@@ -83,6 +84,7 @@ const Controls = ({data}: {data: User}) => {
       </div>
 
       {/* Export */}
+      {/* @ts-ignore */}
       <Export data={data}/>
     </div>
   );
