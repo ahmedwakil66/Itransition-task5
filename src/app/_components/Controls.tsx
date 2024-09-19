@@ -1,7 +1,9 @@
 import React, { ChangeEvent } from "react";
 import useValueStore, { region } from "@/store";
+import Export from './Export';
+import { User } from '@/faker';
 
-const Controls = () => {
+const Controls = ({data}: {data: User}) => {
   const valueStore = useValueStore();
 
   const getErrorInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +83,7 @@ const Controls = () => {
       </div>
 
       {/* Export */}
-      <button
-        type="button"
-        className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700"
-      >
-        Export
-      </button>
+      <Export data={data}/>
     </div>
   );
 };

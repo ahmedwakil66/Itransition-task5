@@ -7,51 +7,57 @@ function seededRandom(seed: number) {
 }
 
 // Function to introduce random errors
-export function introduceErrors(
-  text: string,
-  errorCount: number,
-  seed: number
-) {
-  const errorTypes = ["delete", "add", "swap"];
-  const alphabet =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-  const errorText = text.split(""); // Convert to array for easy manipulation
-
-  for (let i = 0; i < errorCount; i++) {
-    const randomErrorType =
-      errorTypes[Math.floor(seededRandom(seed + i) * errorTypes.length)];
-    const randomPos = Math.floor(seededRandom(seed + i + 1) * errorText.length);
-
-    if (errorText[randomPos] === " ") {
-      continue; // Skip spaces when working spaces
+function introduceErrors(text: string, errorCount: number, seed: number, isPhoneNumber = false) {
+    let errorTypes = ['add-delete', 'swap'];  // Use 'add-delete' and 'swap' to maintain balance
+    const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  
+    let errorText = text.split('');  // Convert to array for easy manipulation
+    const maxRetries = 10;  // Limit retries to avoid infinite loops
+  
+    for (let i = 0; i < errorCount; i++) {
+      const randomErrorType = errorTypes[Math.floor(seededRandom(seed + i) * errorTypes.length)];
+      const randomPos = Math.floor(seededRandom(seed + i + 1) * errorText.length);
+  
+      if (!isPhoneNumber && errorText[randomPos] === ' ') {
+        continue;  // Skip spaces when not working on phone numbers
+      }
+  
+      switch (randomErrorType) {
+        case 'add-delete':
+          // Add a random character
+          const randomChar = alphabet.charAt(Math.floor(seededRandom(seed + i + 2) * alphabet.length));
+          errorText.splice(randomPos, 0, randomChar);  // Add random character at random position
+  
+          // Delete another character at a different random position, avoiding infinite loops
+          let retries = 0;
+          let randomPosToDelete = Math.floor(seededRandom(seed + i + 3) * errorText.length);
+          
+          // Retry deletion up to maxRetries times to avoid infinite loop
+          while (errorText[randomPosToDelete] === ' ' && retries < maxRetries) {
+            randomPosToDelete = Math.floor(seededRandom(seed + i + 4 + retries) * errorText.length);
+            retries++;
+          }
+  
+          // Delete character if it is not a space or we hit max retries
+          if (retries < maxRetries) {
+            errorText.splice(randomPosToDelete, 1);
+          }
+          break;
+          
+        case 'swap':
+          if (randomPos < errorText.length - 1 && errorText[randomPos + 1] !== ' ') {
+            // Swap the character at randomPos with the one next to it
+            let temp = errorText[randomPos];
+            errorText[randomPos] = errorText[randomPos + 1];
+            errorText[randomPos + 1] = temp;
+          }
+          break;
+      }
     }
-
-    switch (randomErrorType) {
-      case "delete":
-        if (errorText.length > 0) {
-          errorText.splice(randomPos, 1); // Delete character at random position
-        }
-        break;
-      case "add":
-        const randomChar = alphabet.charAt(
-          Math.floor(seededRandom(seed + i + 2) * alphabet.length)
-        );
-        errorText.splice(randomPos, 0, randomChar); // Add random character at random position
-        break;
-      case "swap":
-        if (randomPos < errorText.length - 1) {
-          // Swap the character at randomPos with the one next to it
-          const temp = errorText[randomPos];
-          errorText[randomPos] = errorText[randomPos + 1];
-          errorText[randomPos + 1] = temp;
-        }
-        break;
-    }
+  
+    return errorText.join('');  // Convert back to string
   }
-
-  return errorText.join(""); // Convert back to string
-}
+  
 
 function introducePhoneNumberErrors(
   phone: string,

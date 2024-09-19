@@ -5,6 +5,7 @@ import Controls from "./_components/Controls";
 import useValueStore from "@/store";
 import { useCallback, useEffect, useState } from "react";
 import Scroller from "./_components/Scroller";
+import { User } from '@/faker/index';
 
 const HomePage = () => {
   const region = useValueStore((state) => state.region);
@@ -12,7 +13,7 @@ const HomePage = () => {
   const seed = useValueStore((state) => state.seed);
   const page = useValueStore((state) => state.page);
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<User[]>([]);
 
   const fetchData = useCallback(async () => {
     let url = `/api/get-random-data?region=${region}&offset=${page * 10}`;
@@ -36,7 +37,8 @@ const HomePage = () => {
     <div>
       {" "}
       <br /> <br />
-      <Controls />
+      {/* @ts-ignore */}
+      <Controls data={data}/>
       <br />
       <div className="max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-auto relative">
         <table className="min-w-full table-auto border border-collapse text-left text-gray-500 ">
