@@ -8,10 +8,10 @@ function seededRandom(seed: number) {
 
 // Function to introduce random errors
 function introduceErrors(text: string, errorCount: number, seed: number, isPhoneNumber = false) {
-    let errorTypes = ['add-delete', 'swap'];  // Use 'add-delete' and 'swap' to maintain balance
+    const errorTypes = ['add-delete', 'swap'];  // Use 'add-delete' and 'swap' to maintain balance
     const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   
-    let errorText = text.split('');  // Convert to array for easy manipulation
+    const errorText = text.split('');  // Convert to array for easy manipulation
     const maxRetries = 10;  // Limit retries to avoid infinite loops
   
     for (let i = 0; i < errorCount; i++) {
@@ -47,7 +47,7 @@ function introduceErrors(text: string, errorCount: number, seed: number, isPhone
         case 'swap':
           if (randomPos < errorText.length - 1 && errorText[randomPos + 1] !== ' ') {
             // Swap the character at randomPos with the one next to it
-            let temp = errorText[randomPos];
+            const temp = errorText[randomPos];
             errorText[randomPos] = errorText[randomPos + 1];
             errorText[randomPos + 1] = temp;
           }
